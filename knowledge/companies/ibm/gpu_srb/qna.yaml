@@ -164,8 +164,8 @@ seed_examples:
 document_outline: |
  Understand and explain the functional , nonfectional and high level design document of Nvidia GPUs IAAS support
 document:
-  repo: git@github.ibm.com:deepak1-sharma/think-spec-2025.git
-  commit: a843320204d665e5d9f69e607ed63b32133ef2e4
+  repo: https://github.com/ManavIBM/taxonomy.git
+  commit: 7be60db2baad461336b6d7280a89d895ba8929ac
   patterns:
     - h-100_srb_3978_README.md
     - L4_srb-4190-README.md
