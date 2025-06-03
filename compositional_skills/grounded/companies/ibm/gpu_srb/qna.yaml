@@ -1,0 +1,205 @@
+version: 3
+task_description: This skill helps the draft SRB document.
+created_by: Deepak Sharma
+seed_examples:
+  - context: |
+      **Solution Review Board (SRB) Document**
+
+      The SRB document is a formal, detailed proposal required before deploying new services or features to production. It ensures alignment across engineering, offering management, security, compliance, and operations.
+
+      **Overview**
+      The SRB Program aims to:
+      1. Provide end-to-end architectural clarity for new projects.
+      2. Assess risk, compliance, dependencies, and supportability.
+      3. Establish standard documentation to streamline onboarding and future reviews.
+    question: What is the purpose of an SRB document?
+    answer: >
+          The SRB document ensures that any new service or offering proposed for production meets IBM's engineering, security, and operational standards. It enables cross-functional review, risk assessment, and alignment across stakeholders.
+  - context: |
+      **Solution Review Board (SRB) Document**
+
+      The SRB document is a formal, detailed proposal required before deploying new services or features to production. It ensures alignment across engineering, offering management, security, compliance, and operations.
+
+      **Overview**
+      The SRB Program aims to:
+      1. Provide end-to-end architectural clarity for new projects.
+      2. Assess risk, compliance, dependencies, and supportability.
+      3. Establish standard documentation to streamline onboarding and future reviews.
+    question: What are the main sections of an SRB?
+    answer: >
+          An SRB typically includes the following major sections:
+          1. Introduction (Project name, submitter, dates)
+          2. Project Overview (Use cases, networking, out-of-scope)
+          3. Architecture and Interfaces (APIs, deployment, design)
+          4. Testing Strategy
+          5. Solution Space and Alternatives
+  - context: |
+      **Solution Review Board (SRB) Document**
+
+      The SRB document is a formal, detailed proposal required before deploying new services or features to production. It ensures alignment across engineering, offering management, security, compliance, and operations.
+
+      **Overview**
+      The SRB Program aims to:
+      1. Provide end-to-end architectural clarity for new projects.
+      2. Assess risk, compliance, dependencies, and supportability.
+      3. Establish standard documentation to streamline onboarding and future reviews.
+    question: Can an SRB be generated from a COM ticket?
+    answer: >
+          Yes. With minimal input such as GPU type, region, and intended purpose captured in a COM or HAHA ticket, a draft SRB can be generated using a predefined template. The remaining sections can be inferred using assumptions, default constraints, and past SRB patterns.
+  - context: |
+      **Solution Review Board (SRB) Document**
+
+      The SRB document is a formal, detailed proposal required before deploying new services or features to production. It ensures alignment across engineering, offering management, security, compliance, and operations.
+
+      **Overview**
+      The SRB Program aims to:
+      1. Provide end-to-end architectural clarity for new projects.
+      2. Assess risk, compliance, dependencies, and supportability.
+      3. Establish standard documentation to streamline onboarding and future reviews.
+    question: What kind of networking information should be included in the SRB?
+    answer: >
+          The SRB should document VSI and VPC network connectivity, underlay cluster networks, customer isolation, IP address management, and any N-S or E-W traffic routing requirements.
+  - context: |
+      **Input: A COM ticket summary that includes:**
+        GPU model: A100
+        Purpose: High-performance AI inference for financial services
+        Networking: Uses VPC with private cluster setup
+        Compliance: Must follow Cloud Security Baseline
+        Additional Requirements:
+          - Requires dedicated underlay networking
+          - High availability across zones
+          - Log aggregation and alerting setup
+    question: What all things will be included in detail in a SRB document?
+    answer: >
+          SRB Proposal Template
+            1. Introduction
+              1.1 Project Name: B300 GPU Inference for Finance
+              1.2 Submitter and Contributors: TBD
+              1.3 Mentor(s): TBD
+              1.4 Offering Manager(s): TBD
+              1.5 Review Flow: Default (Mentor-defined)
+              1.6 Production Target Date: Q3 2025
+
+            2. Project Overview
+              2.1 Overview:
+                  This SRB outlines the onboarding of B300 GPUs in WDC07 for AI inference workloads in financial services.
+              2.2 Consumer Interaction Model:
+                  Internal services and external APIs for inference tasks.
+              2.3 Requirements and Use Cases:
+                  2.3.1 VSI Network Connectivity: Private cluster, VPC integrated
+                  2.3.2 Underlay Networking: Dedicated fabric needed
+                  2.3.3 Cluster Isolation: Tenant-specific VLAN separation
+              2.4 Out-of-Scope:
+                  No support for public cluster access in this release.
+              2.5 Dependencies:
+                  Requires updated networking driver and compatible logging stack.
+
+            3. Architecture, Interfaces, and Impact
+              3.1 Architecture and Interfaces:
+                  Follows multi-zone HA architecture with API gateway.
+              3.2 Performance and Impact:
+                  Optimized for low latency and high throughput inference.
+              3.3 Logging and Monitoring:
+                  Aggregated logs and alerts via centralized monitoring.
+              3.4 Compliance:
+                  Aligned with Cloud Security Baseline Tier 2.
+
+            4. Testing
+                - Load, failover, and network isolation tests to be conducted.
+
+            5. Solution Space
+                - Possible fallback to GPU in case of hardware unavailability.
+  - context: |
+      **SRB Section: Requirements, Use Cases, and Scope**
+
+      This section focuses on capturing the technical needs, business use cases, and project boundaries. It is used by architects, network engineers, and offering managers to validate feasibility and coverage.
+
+      **Topics Covered**
+      - 2.3 Requirements and Use Cases
+      - 2.4 Out-of-Scope
+      - 2.5 Dependencies and Incompatibilities
+    question: What is included in the “2.3 Requirements and Use Cases” section of an SRB?
+    answer: >
+          This section outlines the infrastructure and functional expectations of the project. It should include:
+          - Network connectivity models (e.g., VSI, VPC)
+          - Underlay/Overlay networking requirements
+          - Tenant isolation and IP strategies
+          - Customer use cases, user journeys, and workflows
+  - context: |
+      **SRB Section: Requirements, Use Cases, and Scope**
+
+      This section focuses on capturing the technical needs, business use cases, and project boundaries. It is used by architects, network engineers, and offering managers to validate feasibility and coverage.
+
+      **Topics Covered**
+      - 2.3 Requirements and Use Cases
+      - 2.4 Out-of-Scope
+      - 2.5 Dependencies and Incompatibilities
+    question: What should be documented in the “2.4 Out-of-Scope” section?
+    answer: >
+          List any features or goals that are not part of this release. Example:
+          - No public endpoint access
+          - No cross-region HA
+          This helps align all teams on what will *not* be delivered.
+  - context: |
+      **SRB Section: Requirements, Use Cases, and Scope**
+
+      This section focuses on capturing the technical needs, business use cases, and project boundaries. It is used by architects, network engineers, and offering managers to validate feasibility and coverage.
+
+      **Topics Covered**
+      - 2.3 Requirements and Use Cases
+      - 2.4 Out-of-Scope
+      - 2.5 Dependencies and Incompatibilities
+    question: How do I fill in the "2.5 Dependencies, Dependents, and Incompatibilities" section?
+    answer: |
+          You should include:
+          - Required software or services (e.g., DNS, Auth, Logging)
+          - Hardware dependencies (e.g., B300 GPU availability)
+          - Platform version constraints
+          - Any incompatible APIs or services
+  - context: |
+      **SRB Section: Architecture, Operations, and Testing**
+
+      This section documents how the system is built, how it will be supported in production, and how it is validated before release. It ensures that the system is scalable, resilient, observable, and compliant.
+
+      **Topics Covered**
+      - 3.1 Architecture and Interfaces
+      - 3.2 Operational Considerations
+      - 4.0 Testing
+    question: What information should be added to 3.1.1 Architecture and Technical Design?
+    answer: |
+          Describe the end-to-end system architecture, including:
+          - Physical and logical cluster topology
+          - API Gateway integration and IAM policies
+          - Microservices layout and communication protocols
+          - Edge ingress, LB, and CDN components (if applicable)
+  - context: |
+      **SRB Section: Architecture, Operations, and Testing**
+
+      This section documents how the system is built, how it will be supported in production, and how it is validated before release. It ensures that the system is scalable, resilient, observable, and compliant.
+
+      **Topics Covered**
+      - 3.1 Architecture and Interfaces
+      - 3.2 Operational Considerations
+      - 4.0 Testing
+    question: What details should I include in 3.2.3 Logging, Alerting, Dashboards?
+    answer: >
+          - What logging stack is used (e.g., ELK, LogDNA)
+          - Defined alerts for CPU/memory/network thresholds
+          - Dashboards showing usage, errors, and system health
+          - Ownership defined in the responsibility matrix
+  - context: |
+      **SRB Section: Architecture, Operations, and Testing**
+
+      This section documents how the system is built, how it will be supported in production, and how it is validated before release. It ensures that the system is scalable, resilient, observable, and compliant.
+
+      **Topics Covered**
+      - 3.1 Architecture and Interfaces
+      - 3.2 Operational Considerations
+      - 4.0 Testing
+    question: How should testing plans be described in Section 4?
+    answer: >
+          Mention the planned validation phases:
+          - Load and stress tests
+          - Resilience (failure injection and node reboots)
+          - Security scans and IAM role validations
+          - Workflow test cases simulating user behavior

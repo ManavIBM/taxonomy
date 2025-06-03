@@ -1,0 +1,172 @@
+version: 3
+domain: ibm_technology
+created_by: Deepak Sharma
+seed_examples:
+  - context: |
+     The Tesla V100 GPU profiles being GA'd will not contain any Instance Storage.
+     However, the A100 profile being provided for research-only will have NVMe disks attached that are passed through to the VM.
+     NVMe based Instance Storage can optionally be used with GPUs.
+    questions_and_answers:
+      - question: What type of storage is included in the Tesla V100 GPU profiles?
+        answer: |
+          The Tesla V100 GPU profiles do not include any Instance Storage.
+      - question: Is Instance Storage available with the A100 GPU profile?
+        answer: |
+          Yes, the A100 GPU profile being provided for research-only includes NVMe disks attached that are passed through to the VM.
+      - question: How can NVMe disks be used with GPUs according to the provided diagram?
+        answer: |
+          According to the diagram, NVMe disks can be optionally used with GPUs by being passed through to the VM in the A100 GPU profile.
+  - context: |
+     The Tesla V300 GPU profiles being GA'd will not contain any Instance Storage.
+     However, the A200 profile being provided for research-only will have NVMe disks attached that are passed through to the VM.
+     NVMe based Instance Storage can optionally be used with GPUs.
+    questions_and_answers:
+      - question: What type of storage is included in the Tesla V300 GPU profiles?
+        answer: |
+         The Tesla V300 GPU profiles do not include any Instance Storage.
+      - question: Is Instance Storage available with the A200 GPU profile?
+        answer: |
+          Yes, the A200 GPU profile being provided for research-only includes NVMe disks attached that are passed through to the VM.
+      - question: How can NVMe disks be used with GPUs according to the provided diagram?
+        answer: |
+          According to the diagram, NVMe disks can be optionally used with GPUs by being passed through to the VM in the A200 GPU profile.
+  - context: |
+      **H100 GPU Requirements and Use Cases**
+
+      This section outlines the technical and business needs for deploying scalable H100 GPU instances within IBM Cloud. It includes specifications for instance design, network integration, billing plans, and differentiated offerings for commercial vs. research workloads.
+
+      **Overview**
+      The H100 deployment aims to:
+      1. Enable flexible deployment models for both standalone and clustered inference workloads.
+      2. Offer dedicated infrastructure with advanced network capabilities.
+      3. Support multi-tenant and research-specific configurations through tailored instance profiles.
+      4. Provide accurate billing and reservation strategies for various customer types.
+    questions_and_answers:
+      - question: What deployment models are supported for H100 GPU instances?
+        answer: |
+          H100 GPU instances can be deployed as:
+          - Standalone inference servers.
+          - Clustered servers within a physically independent aggregation switch network, optimized for high-performance workloads using Cluster Network.
+      - question: How is network connectivity handled in H100 GPU deployments?
+        answer: |
+          - Each H100 instance supports up to 15 VNI/vNICs with full network capabilities.
+          - Users can optionally deploy into a dedicated Cluster Network for accelerator traffic.
+          - Opting into Cluster Network involves defining subnet configurations.
+          - Instances not using a cluster will not connect to cluster NICs.
+      - question: What are the instance profiles for H100 GPUs?
+        answer: |
+          - Standard: `gx3d-160x1792x8h100`
+          - Research: `gx3d-160x1792x8h100-research` — this profile is designed for servers with newer firmware that is deployed early for research workloads.
+          - Both profiles support node and rack anti-affinity using placement groups.
+      - question: What is the billing strategy for H100 GPU usage?
+        answer: |
+          - Gen 3 billing model is used.
+          - Supports both 1-year and 3-year reservation options.
+          - Reservations are available for both clustered and non-clustered deployments.
+      - question: How are research customers handled differently?
+        answer: |
+          - Research customers use a special instance profile (`gx3d-160x1792x8h100-research`) with early-access firmware.
+          - They consume infrastructure similarly to commercial customers.
+          - Eventually, firmware from research nodes is rolled back and adopted for general population nodes.
+      - question: Are there any known restrictions for H100 instance profiles?
+        answer: |
+          - The startup time for new H100 instance profiles is approximately 20 minutes.
+          - This delay is due to the system’s I/O and PCIe remapping requirements.
+  - context: |
+      **HostOS Updates for H100 Deployment**
+
+      HostOS 6.x is the target operating system for H100 GPU instances. A few system-level updates are required to accommodate the newer NICs, enforce proper network configurations, and ensure Kubernetes (Kube) objects are correctly annotated for physical cluster participation.
+
+      **Overview**
+      HostOS updates aim to:
+      1. Ensure compatibility with new CX-7 NIC hardware.
+      2. Update network configurations to support multi-NIC architectures.
+      3. Modify firewall settings to enable east/west traffic across additional NICs.
+      4. Support cluster-aware annotations in Kube nodes for physical GPU topologies.
+    questions_and_answers:
+      - question: What version of HostOS is expected for the H100 solution?
+        answer: |
+          The H100 solution is expected to run on HostOS 6.x. There are no current plans to upgrade to HostOS 7.x for this deployment.
+      - question: Why is a new HostOS boot bundle needed for CX-7 NICs?
+        answer: |
+          The migration to CX-7 NICs may require a new release of the HostOS boot bundle to ensure proper hardware compatibility, driver support, and initialization during boot.
+      - question: What updates are needed in /etc/network.conf for H100?
+        answer: |
+          - Define the presence of 9 NICs on the system.
+          - It does not need to identify NIC roles explicitly (e.g., cloud vs cluster NIC).
+          - Ensure the `hwClass` is embedded in the configuration (only if not already present).
+      - question: What firewall changes are required for HostOS?
+        answer: |
+          HostOS will need updates to iptables and ipsets to support east/west traffic on the additional NICs introduced by the H100 GPU configuration.
+      - question: What is the role of Kube annotations in the HostOS update?
+        answer: |
+          Kubernetes will annotate:
+          - `genctl.nics` on the hypervisor node to indicate NIC participation in the physical cluster (e.g., 8 GPU NICs in, cloud NIC out).
+          - The node object with the type of cluster (e.g., H100) and the cluster name.
+          These values will be pulled from updated `mzone` server definitions.
+      - question: What is the purpose of the `GravingYard` Kube define?
+        answer: |
+          The `GravingYard` Kube define ensures that relevant cluster-related annotations are applied to nodes and interfaces, which helps orchestrate and manage physical GPU clusters accurately in environments with hybrid NIC roles.
+  - context: |
+      **VPC Big Rules Compliance for H100 GPU Solution**
+
+      All infrastructure and services associated with the H100 GPU deployment must comply with IBM Cloud VPC/Next Gen (NG) "Big Rules"—a set of mandatory architectural and operational guidelines. These rules are designed to ensure scalability, consistency, security, and observability across all regions and modalities.
+
+      **Overview**
+      The Big Rules enforce:
+      - Use of existing control planes and API standards.
+      - Full observability and diagnosability.
+      - Stateless design and secure, consistent behavior.
+      - Parity across APIs, UI, CLI, and Terraform tooling.
+    questions_and_answers:
+      - question: Is live upgradeability required for all H100 GPU solution components?
+        answer: |
+          Yes. All components must support live upgrades without service degradation or manual intervention. However, host-disruptive maintenance may still cause customer outages, which is consistent with similar solutions.
+      - question: Are usage metrics required from all components?
+        answer: |
+          No. While observability is generally required, it is acknowledged that passed-through devices such as GPUs do not expose usage metrics. These devices maintain internal state but do not provide usage statistics.
+      - question: What monitoring framework must all components use?
+        answer: |
+          All components must integrate with the VPC/NG monitoring framework to ensure consistent metrics collection, alerting, and visibility.
+      - question: Can new control planes be introduced for H100 GPU?
+        answer: |
+          No. All components must utilize the existing VPC/NG control planes. New control planes are not allowed.
+      - question: How should H100 components expose functionality?
+        answer: |
+          All components must be operable through well-defined APIs and provide full feature parity across UI, CLI, API, and Terraform.
+      - question: Is support for Z architecture required?
+        answer: |
+          No. Functional parity across all platform architectures is not required in this case, as Z systems do not support GPU capability.
+      - question: How should APIs and UIs operate on VPC/NG resources?
+        answer: |
+          All public-facing UIs and CLIs must use the RIAS API for interacting with VPC/NG resources to maintain consistency.
+      - question: What standards must public APIs follow?
+        answer: |
+          Public APIs must adhere to the API Handbook guidelines and must provide identical functionality in all IBM Cloud regions.
+      - question: What IAM system must be used for authorization?
+        answer: |
+          All components must use the VPC/NG IAM services for authorization to ensure centralized and secure access control.
+      - question: Must services maintain internal state?
+        answer: |
+          No. All components must be internally stateless and be able to rehydrate their runtime state from external sources.
+      - question: How should caching be handled?
+        answer: |
+          Any caching or shadowing of state must not lead to inconsistent or incorrect behavior being observed by API consumers.
+      - question: What diagnostics capability must hardware components provide?
+        answer: |
+          Hardware components must implement the VPC/NG diagnosability framework and expose an on-demand diagnostic API.
+      - question: What state APIs must services implement?
+        answer: |
+          All services must provide APIs to get, set, and watch their internal state for observability and operational transparency.
+      - question: What security measures must be enforced between components?
+        answer: |
+          All inter-component communication must be mutually authenticated and encrypted using AES-128 or stronger encryption algorithms.
+document_outline: |
+ Understand and explain the functional , nonfectional and high level design document of Nvidia GPUs IAAS support
+document:
+  repo: git@github.ibm.com:deepak1-sharma/think-spec-2025.git
+  commit: a843320204d665e5d9f69e607ed63b32133ef2e4
+  patterns:
+    - h-100_srb_3978_README.md
+    - L4_srb-4190-README.md
+    - V-100-srb-1292-README.md
